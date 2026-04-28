@@ -9,7 +9,7 @@ export interface AccessibilityPreferences {
   dyslexiaFont?: boolean;
   readingRuler?: boolean;
   focusParagraph?: boolean;
-  hideDistactions?: boolean;
+  hideDistractions?: boolean;
   profile?: string;
 }
 

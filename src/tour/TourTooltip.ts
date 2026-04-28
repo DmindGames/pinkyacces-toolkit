@@ -46,24 +46,64 @@ export class TourTooltip {
     isFirst: boolean,
     isLast: boolean
   ): void {
-    const progress = `${i18n.stepOf(stepIndex + 1, totalSteps)}`;
+    const progress = i18n.stepOf(stepIndex + 1, totalSteps);
     this.el.setAttribute('aria-label', `${step.title} - ${progress}`);
-    this.el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:0.75rem;color:#888;font-weight:500;">${progress}</span>
-        <button id="pinky-tour-skip" aria-label="${i18n.skip}" style="background:none;border:none;cursor:pointer;color:#888;font-size:0.875rem;padding:2px 6px;">✕</button>
-      </div>
-      <h3 style="margin:0 0 8px;font-size:1.1rem;color:#111;">${step.title}</h3>
-      <p style="margin:0 0 16px;font-size:0.925rem;color:#444;line-height:1.5;">${step.description}</p>
-      <div style="display:flex;gap:8px;justify-content:flex-end;">
-        ${!isFirst ? `<button id="pinky-tour-prev" style="padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.875rem;">${i18n.prev}</button>` : ''}
-        <button id="pinky-tour-next" style="padding:8px 16px;border:none;border-radius:6px;background:#f472b6;color:#fff;cursor:pointer;font-size:0.875rem;font-weight:600;">${isLast ? i18n.finish : i18n.next}</button>
-      </div>
-    `;
 
-    this.el.querySelector('#pinky-tour-next')?.addEventListener('click', callbacks.onNext);
-    this.el.querySelector('#pinky-tour-prev')?.addEventListener('click', callbacks.onPrev);
-    this.el.querySelector('#pinky-tour-skip')?.addEventListener('click', callbacks.onSkip);
+    // Clear previous content
+    this.el.textContent = '';
+
+    // Header row: progress + skip button
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;';
+
+    const progressSpan = document.createElement('span');
+    progressSpan.style.cssText = 'font-size:0.75rem;color:#888;font-weight:500;';
+    progressSpan.textContent = progress;
+
+    const skipBtn = document.createElement('button');
+    skipBtn.id = 'pinky-tour-skip';
+    skipBtn.setAttribute('aria-label', i18n.skip);
+    skipBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:#888;font-size:0.875rem;padding:2px 6px;';
+    skipBtn.textContent = '✕';
+    skipBtn.addEventListener('click', callbacks.onSkip);
+
+    header.appendChild(progressSpan);
+    header.appendChild(skipBtn);
+
+    // Title
+    const title = document.createElement('h3');
+    title.style.cssText = 'margin:0 0 8px;font-size:1.1rem;color:#111;';
+    title.textContent = step.title;
+
+    // Description
+    const desc = document.createElement('p');
+    desc.style.cssText = 'margin:0 0 16px;font-size:0.925rem;color:#444;line-height:1.5;';
+    desc.textContent = step.description;
+
+    // Action buttons
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;';
+
+    if (!isFirst) {
+      const prevBtn = document.createElement('button');
+      prevBtn.id = 'pinky-tour-prev';
+      prevBtn.style.cssText = 'padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.875rem;';
+      prevBtn.textContent = i18n.prev;
+      prevBtn.addEventListener('click', callbacks.onPrev);
+      actions.appendChild(prevBtn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.id = 'pinky-tour-next';
+    nextBtn.style.cssText = 'padding:8px 16px;border:none;border-radius:6px;background:#f472b6;color:#fff;cursor:pointer;font-size:0.875rem;font-weight:600;';
+    nextBtn.textContent = isLast ? i18n.finish : i18n.next;
+    nextBtn.addEventListener('click', callbacks.onNext);
+    actions.appendChild(nextBtn);
+
+    this.el.appendChild(header);
+    this.el.appendChild(title);
+    this.el.appendChild(desc);
+    this.el.appendChild(actions);
   }
 
   position(target: HTMLElement | null, preferred: TooltipPosition = 'bottom'): void {
