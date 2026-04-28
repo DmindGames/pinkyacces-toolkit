@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pinkyacces Toolkit – Vanilla JS Example</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #f472b6; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
+    button {
+      padding: 10px 18px; border: none; border-radius: 8px;
+      background: #f472b6; color: #fff; cursor: pointer; font-size: 0.9rem;
+    }
+    button:hover { background: #ec4899; }
+    button.secondary { background: #e5e7eb; color: #374151; }
+    button.secondary:hover { background: #d1d5db; }
+    #content { line-height: 1.6; }
+    select { padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h1 id="app-title">🌸 Pinkyacces Toolkit Demo</h1>
+
+  <div class="controls">
+    <div>
+      <label for="profile-select">Perfil de accesibilidad: </label>
+      <select id="profile-select">
+        <option value="default">Por defecto</option>
+        <option value="low-vision">Baja visión</option>
+        <option value="dyslexia">Dislexia</option>
+        <option value="senior">Adulto mayor</option>
+        <option value="color-blind">Daltonismo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="btn-font-up">A+ Aumentar fuente</button>
+    <button id="btn-font-down">A- Reducir fuente</button>
+    <button id="btn-ruler" class="secondary">📏 Regla de lectura</button>
+    <button id="btn-dyslexia" class="secondary">Fuente dislexia</button>
+    <button id="btn-reset" class="secondary">↺ Resetear</button>
+    <button id="btn-tour">🎯 Iniciar tour</button>
+  </div>
+
+  <article id="content">
+    <h2 id="section-a11y">Accesibilidad web</h2>
+    <p>
+      La accesibilidad web asegura que las personas con discapacidades puedan percibir,
+      entender, navegar e interactuar con sitios y aplicaciones web.
+    </p>
+    <p>
+      Las pautas WCAG (Web Content Accessibility Guidelines) establecen un estándar
+      internacional para garantizar que el contenido digital sea accesible para todos.
+    </p>
+
+    <h2 id="section-tour">Tours interactivos</h2>
+    <p>
+      Los tours interactivos guían a los usuarios nuevos a través de las funcionalidades
+      principales de una aplicación, mejorando el proceso de onboarding.
+    </p>
+  </article>
+
+  <script type="module">
+    import {
+      applyProfile,
+      setFontScale,
+      getFontScale,
+      resetFontScale,
+      enableReadingRuler,
+      disableReadingRuler,
+      isReadingRulerEnabled,
+      enableDyslexiaFont,
+      disableDyslexiaFont,
+      isDyslexiaFontEnabled,
+      injectContrastStyles,
+      TourEngine,
+    } from '../../dist/index.js';
+
+    injectContrastStyles();
+
+    document.getElementById('profile-select').addEventListener('change', (e) => {
+      applyProfile(e.target.value);
+    });
+
+    document.getElementById('btn-font-up').addEventListener('click', () => {
+      setFontScale(getFontScale() + 0.1);
+    });
+
+    document.getElementById('btn-font-down').addEventListener('click', () => {
+      setFontScale(getFontScale() - 0.1);
+    });
+
+    document.getElementById('btn-ruler').addEventListener('click', () => {
+      if (isReadingRulerEnabled()) disableReadingRuler();
+      else enableReadingRuler();
+    });
+
+    document.getElementById('btn-dyslexia').addEventListener('click', () => {
+      if (isDyslexiaFontEnabled()) disableDyslexiaFont();
+      else enableDyslexiaFont();
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      applyProfile('default');
+      document.getElementById('profile-select').value = 'default';
+    });
+
+    const tour = new TourEngine({
+      steps: [
+        {
+          target: '#app-title',
+          title: 'Bienvenido',
+          description: 'Esta es la demo de Pinkyacces Toolkit. Explora las funciones de accesibilidad.',
+          position: 'bottom',
+        },
+        {
+          target: '#profile-select',
+          title: 'Perfiles de accesibilidad',
+          description: 'Selecciona un perfil predefinido adaptado a diferentes necesidades.',
+          position: 'bottom',
+        },
+        {
+          target: '#btn-ruler',
+          title: 'Regla de lectura',
+          description: 'Activa una guía visual que sigue el cursor para facilitar la lectura.',
+          position: 'bottom',
+        },
+        {
+          target: '#section-a11y',
+          title: 'Contenido accesible',
+          description: 'Todo el contenido se ajusta automáticamente según tus preferencias.',
+          position: 'bottom',
+        },
+        {
+          target: null,
+          title: '¡Listo!',
+          description: 'Has completado el tour. ¡Disfruta explorando las funciones de accesibilidad!',
+          position: 'center',
+        },
+      ],
+      callbacks: {
+        onComplete: () => console.log('Tour completado'),
+        onCancel: () => console.log('Tour cancelado'),
+      },
+      scrollToTarget: true,
+    });
+
+    document.getElementById('btn-tour').addEventListener('click', () => {
+      tour.start();
+    });
+  </script>
+</body>
+</html>

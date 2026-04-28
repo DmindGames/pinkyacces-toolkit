@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pinkyacces Toolkit – Tour Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f9fafb; }
+    header { background: #f472b6; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    nav { display: flex; gap: 16px; }
+    nav a { color: #fff; text-decoration: none; font-size: 0.95rem; }
+    main { max-width: 900px; margin: 40px auto; padding: 0 24px; }
+    .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+    .card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card h3 { margin: 0 0 8px; color: #374151; font-size: 1rem; }
+    .card .metric { font-size: 2rem; font-weight: 700; color: #f472b6; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+    button {
+      padding: 10px 20px; border: none; border-radius: 8px;
+      background: #f472b6; color: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+    }
+    button.secondary { background: #e5e7eb; color: #374151; }
+    #user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    #user-profile img { width: 36px; height: 36px; border-radius: 50%; background: #fff; }
+  </style>
+</head>
+<body>
+
+<header id="app-header">
+  <h1>🌸 Mi Aplicación</h1>
+  <nav id="nav-menu">
+    <a href="#">Inicio</a>
+    <a href="#">Proyectos</a>
+    <a href="#">Reportes</a>
+    <a href="#">Configuración</a>
+  </nav>
+  <div id="user-profile">
+    <span>Hola, Usuario</span>
+    <div style="width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;color:#f472b6;font-weight:bold;">U</div>
+  </div>
+</header>
+
+<main>
+  <h2>Panel de control</h2>
+
+  <div id="dashboard-summary" class="dashboard">
+    <div class="card">
+      <h3>Proyectos activos</h3>
+      <div class="metric">12</div>
+    </div>
+    <div class="card">
+      <h3>Tareas completadas</h3>
+      <div class="metric">84%</div>
+    </div>
+    <div class="card">
+      <h3>Usuarios en línea</h3>
+      <div class="metric">7</div>
+    </div>
+    <div class="card">
+      <h3>Alertas pendientes</h3>
+      <div class="metric">3</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="btn-start-tour">🎯 Iniciar tour guiado</button>
+    <button class="secondary" id="btn-restart">↺ Reiniciar tour</button>
+  </div>
+
+  <section id="quick-actions">
+    <h3>Acciones rápidas</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="secondary">+ Nuevo proyecto</button>
+      <button class="secondary">📊 Ver reportes</button>
+      <button class="secondary">👥 Gestionar usuarios</button>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { TourEngine, I18N_EN } from '../../dist/tour/index.js';
+
+  const tour = new TourEngine({
+    steps: [
+      {
+        target: '#app-header',
+        title: 'Cabecera de la app',
+        description: 'Aquí encontrarás el nombre de la aplicación y el menú principal.',
+        position: 'bottom',
+      },
+      {
+        target: '#nav-menu',
+        title: 'Navegación principal',
+        description: 'Accede a todas las secciones: Inicio, Proyectos, Reportes y Configuración.',
+        position: 'bottom',
+      },
+      {
+        target: '#user-profile',
+        title: 'Tu perfil',
+        description: 'Haz clic aquí para editar tu información personal y configurar preferencias.',
+        position: 'left',
+      },
+      {
+        target: '#dashboard-summary',
+        title: 'Resumen del panel',
+        description: 'Visualiza las métricas más importantes de tu proyecto en tiempo real.',
+        position: 'bottom',
+      },
+      {
+        target: '#quick-actions',
+        title: 'Acciones rápidas',
+        description: 'Realiza las tareas más frecuentes con un solo clic desde aquí.',
+        position: 'top',
+      },
+      {
+        target: null,
+        title: '¡Tour completado! 🎉',
+        description: 'Ya conoces todas las secciones principales. ¡Empieza a explorar tu panel!',
+        position: 'center',
+      },
+    ],
+    callbacks: {
+      onStart: () => console.log('Tour started'),
+      onStepChange: (i, step) => console.log(`Step ${i}: ${step.title}`),
+      onComplete: () => {
+        console.log('Tour completed!');
+        document.getElementById('btn-start-tour').textContent = '✅ Tour completado';
+      },
+      onCancel: () => console.log('Tour cancelled'),
+    },
+    scrollToTarget: true,
+    closeOnOverlayClick: false,
+  });
+
+  document.getElementById('btn-start-tour').addEventListener('click', () => tour.start());
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    document.getElementById('btn-start-tour').textContent = '🎯 Iniciar tour guiado';
+    tour.start();
+  });
+</script>
+</body>
+</html>
