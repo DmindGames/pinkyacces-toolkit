@@ -11,19 +11,19 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./tour": {
+      "types": "./dist/tour/index.d.ts",
       "import": "./dist/tour/index.js",
-      "require": "./dist/tour/index.cjs",
-      "types": "./dist/tour/index.d.ts"
+      "require": "./dist/tour/index.cjs"
     },
     "./accessibility": {
+      "types": "./dist/accessibility/index.d.ts",
       "import": "./dist/accessibility/index.js",
-      "require": "./dist/accessibility/index.cjs",
-      "types": "./dist/accessibility/index.d.ts"
+      "require": "./dist/accessibility/index.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -41,7 +41,7 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src tests --ext .ts",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm run test && npm run typecheck",
+    "prepublishOnly": "npm run lint && npm run build && npm run test && npm run typecheck",
     "release:patch": "npm version patch && npm publish --access public",
     "release:minor": "npm version minor && npm publish --access public",
     "release:major": "npm version major && npm publish --access public"

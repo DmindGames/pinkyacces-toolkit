@@ -4,7 +4,8 @@ import { runDoctor } from './commands/doctor.js';
 import { runDemo } from './commands/demo.js';
 import { error, info } from './utils.js';
 
-const VERSION = '0.1.0';
+declare const __PKG_VERSION__: string;
+const VERSION = __PKG_VERSION__;
 
 function printHelp(): void {
   console.log(`

@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
 
 export function log(message: string): void {
   console.log(message);
@@ -26,8 +26,8 @@ export function ensureDir(dir: string): void {
 }
 
 export function writeFile(filePath: string, content: string): void {
-  const dir = filePath.split('/').slice(0, -1).join('/');
-  if (dir) ensureDir(dir);
+  const dir = dirname(filePath);
+  if (dir && dir !== '.') ensureDir(dir);
   writeFileSync(filePath, content, 'utf-8');
 }
 

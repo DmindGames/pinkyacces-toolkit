@@ -162,4 +162,3 @@ npx pinkyacces-toolkit demo        # show examples
 ## License
 
 MIT © [DmindGames](https://github.com/DmindGames)
-Libreria para accesibilidad y tours 
